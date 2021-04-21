@@ -527,16 +527,8 @@ func (ec *Client) SendTransaction(ctx context.Context, tx *types.Transaction) er
 	return ec.c.CallContext(ctx, nil, "eth_sendRawTransaction", hexutil.Encode(data))
 }
 
-type MegaBundle struct {
-	TransactionList types.Transactions
-	Timestamp       uint64
-	Coinbase_diff   uint64
-	Coinbase        common.Address
-	ParentHash      common.Hash
-}
-
 func (ec *Client) SendMegaBundle(
-	ctx context.Context, mb *MegaBundle,
+	ctx context.Context, mb *types.MegaBundle,
 ) error {
 	return nil
 }

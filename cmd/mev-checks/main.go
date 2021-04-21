@@ -12,13 +12,18 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
+const (
+	miner = "0xd912aecb07e9f4e1ea8e6b4779e7fb6aa1c3e4d8"
+)
+
 var (
 	clientDial = flag.String(
-		"client_dial", "ws://127.0.0.1:8545", "could be websocket or IPC",
+		"client_dial", "ws://127.0.0.1:8546", "could be websocket or IPC",
 	)
 	cb = flag.String(
-		"coinbase", "", "what coinbase to use",
+		"coinbase", miner, "what coinbase to use",
 	)
+	at = flag.Uint64("kickoff", 64, "what number to kick off at")
 )
 
 func program() error {
@@ -42,9 +47,9 @@ func program() error {
 			return e
 		case incoming := <-ch:
 			fmt.Println("header is ", incoming)
-			if incoming.Number.Uint64() == 5 {
+			if incoming.Number.Uint64() == *at {
 				if err := client.SendMegaBundle(
-					context.Background(), &ethclient.MegaBundle{
+					context.Background(), &types.MegaBundle{
 						TransactionList: nil,
 						Timestamp:       uint64(time.Now().Add(time.Second * 45).Unix()),
 						Coinbase_diff:   3e18,
@@ -54,6 +59,7 @@ func program() error {
 				); err != nil {
 					return err
 				}
+				fmt.Println("kicked off mega bundle")
 			}
 		}
 	}

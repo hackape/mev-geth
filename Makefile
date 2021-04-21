@@ -150,3 +150,5 @@ geth-windows-amd64:
 mev-tools:
 	$(GORUN) build/ci.go install ./cmd/mev-checks
 	@echo "made mev-tools"
+
+both: mev-tools geth;
